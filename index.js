@@ -101,13 +101,24 @@ function animate() {
 
 	platform.draw();
 
-	//lateral movement
-	if (keys.right.pressed == true) {
+	/*************lateral movement and platform scrolling **************/
+	// if the right arrow key is pressed and the player x-position is less than 400 px, make the player x-velocity (change in position) +5
+	// otherwise if the left key is pressed and the player x-position is greater than 100 px, make the player x-velocity (change in position) -5
+	// otherwise...
+	//don't move the player
+	//if the right key is pressed, subtract 5 from the platform x-position value
+	//if the left key is pressed, add 5 to the platform x-position value
+	if (keys.right.pressed == true && player.position.x < 400) {
 		player.velocity.x = 5;
-	} else if (keys.left.pressed == true) {
+	} else if (keys.left.pressed == true && player.position.x > 100) {
 		player.velocity.x = -5;
 	} else {
 		player.velocity.x = 0;
+		if (keys.right.pressed == true) {
+			platform.position.x -= 5;
+		} else if (keys.left.pressed == true) {
+			platform.position.x += 5;
+		}
 	}
 
 	/**********detect platform collision from top*********/
