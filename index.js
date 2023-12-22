@@ -61,13 +61,13 @@ class Player {
 
 /******Platform class ********/
 class Platform {
-	constructor() {
+	constructor(x, y) {
 		this.width = 200;
 		this.height = 20;
 
 		this.position = {
-			x: 150,
-			y: canvas.height - 75,
+			x: x,
+			y: y,
 		};
 	}
 
@@ -78,11 +78,12 @@ class Platform {
 }
 
 const player = new Player();
-// player.draw();
-//player.update(); //"2"
 
-const platform = new Platform();
+//create a variable to store 1 platform
+//const platform = new Platform();
 
+//create a variable to store multiple platforms as an array. The platform constructor accepts an x and y value for the platform anchor
+const platforms = [new Platform(150, canvas.height - 75), new Platform(200, canvas.height - 250)];
 const keys = {
 	right: {
 		pressed: false,
@@ -99,7 +100,10 @@ function animate() {
 	c.clearRect(0, 0, canvas.width, canvas.height); // "8" this clears the whole canvas
 	player.update(); //"7"
 
-	platform.draw();
+	//loop through each platform array item and call the draw method
+	platforms.forEach((platform) => {
+		platform.draw();
+	});
 
 	/*************lateral movement and platform scrolling **************/
 	// if the right arrow key is pressed and the player x-position is less than 400 px, make the player x-velocity (change in position) +5
@@ -115,9 +119,13 @@ function animate() {
 	} else {
 		player.velocity.x = 0;
 		if (keys.right.pressed == true) {
-			platform.position.x -= 5;
+			platforms.forEach((platform) => {
+				platform.position.x -= 5;
+			});
 		} else if (keys.left.pressed == true) {
-			platform.position.x += 5;
+			platforms.forEach((platform) => {
+				platform.position.x += 5;
+			});
 		}
 	}
 
@@ -127,33 +135,34 @@ function animate() {
 	//the player's next change in position (velocity) is below the top of the platform by seeing if the player's y anchor value plus its height value plus its next change in position is greater than the anchor position of the platform
 	//there is platform to the right of the player by seeing if the player's x anchor value plus its width value is greater than x anchor value of the platform
 	//and there is platform to the left of the player by seeing if the player's x anchor value is less than the platforms x anchor value plus its width
-	if (
-		player.position.y + player.height <= platform.position.y &&
-		player.position.y + player.height + player.velocity.y >= platform.position.y &&
-		player.position.x + player.width >= platform.position.x &&
-		player.position.x <= platform.position.x + platform.width
-	) {
-		player.velocity.y = 0;
-		player.position.y = platform.position.y - player.height;
-	}
+	platforms.forEach((platform) => {
+		if (
+			player.position.y + player.height <= platform.position.y &&
+			player.position.y + player.height + player.velocity.y >= platform.position.y &&
+			player.position.x + player.width >= platform.position.x &&
+			player.position.x <= platform.position.x + platform.width
+		) {
+			player.velocity.y = 0;
+			player.position.y = platform.position.y - player.height;
+		}
 
-	/**********detect platform collision from bottom*********/
-	//check to see if:
-	//the player below the platform by seeing if the player y anchor value is greater than the platform anchor point value plus its height
-	//the player's next change in position (velocity) is above the bottom of the platform by seeing if the player's y anchor value plus its next change in position is less than the platform y-anchor position + its height
-	//there is platform to the right of the player by seeing if the player's x anchor value plus its width value is greater than x anchor value of the platform
-	//and there is platform to the left of the player by seeing if the player's x anchor value is less than the platforms x anchor value plus its width
-	if (
-		player.position.y >= platform.position.y + platform.height &&
-		player.position.y + player.velocity.y <= platform.position.y + platform.height &&
-		player.position.x + player.width >= platform.position.x &&
-		player.position.x <= platform.position.x + platform.width
-	) {
-		player.velocity.y = 0;
-		player.position.y = platform.position.y + platform.height;
-	}
+		/**********detect platform collision from bottom*********/
+		//check to see if:
+		//the player below the platform by seeing if the player y anchor value is greater than the platform anchor point value plus its height
+		//the player's next change in position (velocity) is above the bottom of the platform by seeing if the player's y anchor value plus its next change in position is less than the platform y-anchor position + its height
+		//there is platform to the right of the player by seeing if the player's x anchor value plus its width value is greater than x anchor value of the platform
+		//and there is platform to the left of the player by seeing if the player's x anchor value is less than the platforms x anchor value plus its width
+		if (
+			player.position.y >= platform.position.y + platform.height &&
+			player.position.y + player.velocity.y <= platform.position.y + platform.height &&
+			player.position.x + player.width >= platform.position.x &&
+			player.position.x <= platform.position.x + platform.width
+		) {
+			player.velocity.y = 0;
+			player.position.y = platform.position.y + platform.height;
+		}
+	});
 }
-
 animate(); //"6"
 
 // add event listeners for the keys. specify as a string what event is getting called
