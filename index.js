@@ -93,6 +93,9 @@ const keys = {
 	},
 };
 
+//this variable will track the players change in canvas x-position from its original position
+let scrollOffset = 0;
+
 function animate() {
 	//"3"
 	window.requestAnimationFrame(animate); // "4" this is a JavaScript function that caues code to repeat over n over
@@ -119,16 +122,22 @@ function animate() {
 	} else {
 		player.velocity.x = 0;
 		if (keys.right.pressed == true) {
+			scrollOffset += 5;
 			platforms.forEach((platform) => {
 				platform.position.x -= 5;
 			});
 		} else if (keys.left.pressed == true) {
+			scrollOffset -= 5;
 			platforms.forEach((platform) => {
 				platform.position.x += 5;
 			});
 		}
-	}
 
+		if (scrollOffset > 5000) {
+			console.log('you win');
+		}
+	}
+	console.log('scroll offset', scrollOffset);
 	/**********detect platform collision from top*********/
 	//check to see if:
 	//the player above the platform by seeing if the player y anchor value plus its height value is less than the platform anchor point value
