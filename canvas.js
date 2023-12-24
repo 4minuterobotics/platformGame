@@ -5,8 +5,12 @@ const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
 const gravity = 1; //"9"
 //set the canvas to be the full width and height of the screen
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+// canvas.width = window.innerWidth;
+// canvas.height = window.innerHeight;
+
+//set the canvas to a set width and height
+canvas.width = 1024;
+canvas.height = 576;
 console.log(c);
 
 /*****Player class ******/
@@ -82,7 +86,7 @@ image.src = platform;
 console.log('image:', image);
 
 //create a variable to store multiple platforms as an array. The platform constructor accepts an x and y value for the platform anchor
-const platforms = [new Platform(200, 100, image), new Platform(500, 200, image)];
+const platforms = [new Platform(-1, 470, image), new Platform(image.width - 3, 470, image)];
 const keys = {
 	right: {
 		pressed: false,
@@ -99,8 +103,11 @@ function animate() {
 	//"3"
 	window.requestAnimationFrame(animate); // "4" this is a JavaScript function that caues code to repeat over n over
 	// console.log('go'); //"5"
-	c.clearRect(0, 0, canvas.width, canvas.height); // "8" this clears the whole canvas
+	// c.clearRect(0, 0, canvas.width, canvas.height); // "8" this clears the whole canvas
 
+	//instead of clearing the canvas, we're now filling it with the color white
+	c.fillStyle = 'white';
+	c.fillRect(0, 0, canvas.width, canvas.height);
 	//loop through each platform array item and call the draw method
 	platforms.forEach((platform) => {
 		platform.draw();
