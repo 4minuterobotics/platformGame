@@ -1,3 +1,6 @@
+import platform from './img/platform.png';
+console.log('platform:', platform);
+
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
 const gravity = 1; //"9"
@@ -46,24 +49,15 @@ class Player {
 			this.velocity.y = 0;
 			this.position.y = canvas.height - this.height;
 		}
-
-		// 	/*****x-direction movement****/
-		// 	//Moving right: if the object still has room to its right, set the upcoming change in x-direction (x-velocity) to increase by 20.
-		// 	if (this.position.x + this.width + this.velocity.x <= canvas.width * 2) {
-		// 		this.position.x = this.velocity.x;
-		// 	} else {
-		// 		//otherwise, set the position equal to the width of the canvas minus the width of the object
-		// 		this.velocity.x = canvas.width - this.width;
-		// 		this.position.x = this.velocity.x;
-		// 	}
 	}
 }
 
 /******Platform class ********/
 class Platform {
-	constructor(x, y) {
-		this.width = 200;
-		this.height = 20;
+	constructor(x, y, image) {
+		this.image = image;
+		this.width = image.width;
+		this.height = image.height;
 
 		this.position = {
 			x: x,
@@ -72,8 +66,9 @@ class Platform {
 	}
 
 	draw() {
-		c.fillStyle = 'blue';
-		c.fillRect(this.position.x, this.position.y, this.width, this.height);
+		// c.fillStyle = 'blue';
+		// c.fillRect(this.position.x, this.position.y, this.width, this.height);
+		c.drawImage(this.image, this.position.x, this.position.y); //this takes an image, x-value, and y-value
 	}
 }
 
@@ -82,8 +77,12 @@ const player = new Player();
 //create a variable to store 1 platform
 //const platform = new Platform();
 
+const image = new Image();
+image.src = platform;
+console.log('image:', image);
+
 //create a variable to store multiple platforms as an array. The platform constructor accepts an x and y value for the platform anchor
-const platforms = [new Platform(150, canvas.height - 75), new Platform(200, canvas.height - 250)];
+const platforms = [new Platform(200, 100, image), new Platform(500, 200, image)];
 const keys = {
 	right: {
 		pressed: false,
@@ -101,13 +100,13 @@ function animate() {
 	window.requestAnimationFrame(animate); // "4" this is a JavaScript function that caues code to repeat over n over
 	// console.log('go'); //"5"
 	c.clearRect(0, 0, canvas.width, canvas.height); // "8" this clears the whole canvas
-	player.update(); //"7"
 
 	//loop through each platform array item and call the draw method
 	platforms.forEach((platform) => {
 		platform.draw();
 	});
 
+	player.update(); //"7"
 	/*************lateral movement and platform scrolling **************/
 	// if the right arrow key is pressed and the player x-position is less than 400 px, make the player x-velocity (change in position) +5
 	// otherwise if the left key is pressed and the player x-position is greater than 100 px, make the player x-velocity (change in position) -5
@@ -156,7 +155,7 @@ function animate() {
 		}
 
 		/**********detect platform collision from bottom*********/
-		//check to see if:
+		/*	//check to see if:
 		//the player below the platform by seeing if the player y anchor value is greater than the platform anchor point value plus its height
 		//the player's next change in position (velocity) is above the bottom of the platform by seeing if the player's y anchor value plus its next change in position is less than the platform y-anchor position + its height
 		//there is platform to the right of the player by seeing if the player's x anchor value plus its width value is greater than x anchor value of the platform
@@ -169,7 +168,7 @@ function animate() {
 		) {
 			player.velocity.y = 0;
 			player.position.y = platform.position.y + platform.height;
-		}
+		}*/
 	});
 }
 animate(); //"6"
