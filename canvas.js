@@ -1,5 +1,6 @@
 import platform from './img/platform.png';
-console.log('platform:', platform);
+import hills from './img/hills.png';
+import background from './img/background.png';
 
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
@@ -76,17 +77,46 @@ class Platform {
 	}
 }
 
+/******Generic Object class ********/
+class GenericObject {
+	constructor(x, y, image) {
+		this.image = image;
+		this.width = image.width;
+		this.height = image.height;
+
+		this.position = {
+			x: x,
+			y: y,
+		};
+	}
+
+	draw() {
+		// c.fillStyle = 'blue';
+		// c.fillRect(this.position.x, this.position.y, this.width, this.height);
+		c.drawImage(this.image, this.position.x, this.position.y); //this takes an image, x-value, and y-value
+	}
+}
+
+const platformImage = createImage(platform);
+const backgroundImage = createImage(background);
+const hillsImage = createImage(hills);
+
 const player = new Player();
 
 //create a variable to store 1 platform
 //const platform = new Platform();
 
-const image = new Image();
-image.src = platform;
-console.log('image:', image);
+function createImage(imageSrc) {
+	let image = new Image();
+	image.src = imageSrc;
+	return image;
+}
 
-//create a variable to store multiple platforms as an array. The platform constructor accepts an x and y value for the platform anchor
-const platforms = [new Platform(-1, 470, image), new Platform(image.width - 3, 470, image)];
+//create a variable to store multiple platforms as an array. The platform constructor accepts an x and y value for the platform anchor, and the image source
+const platforms = [new Platform(-1, 470, platformImage), new Platform(platformImage.width - 3, 470, platformImage)];
+
+const genericObjects = [new GenericObject(-1, -1, backgroundImage), new GenericObject(-1, -1, hillsImage)]; //setting the x and y to -1 gets rid of the white edges
+
 const keys = {
 	right: {
 		pressed: false,
@@ -108,6 +138,11 @@ function animate() {
 	//instead of clearing the canvas, we're now filling it with the color white
 	c.fillStyle = 'white';
 	c.fillRect(0, 0, canvas.width, canvas.height);
+
+	genericObjects.forEach((genericObject) => {
+		genericObject.draw();
+	});
+
 	//loop through each platform array item and call the draw method
 	platforms.forEach((platform) => {
 		platform.draw();
@@ -132,10 +167,18 @@ function animate() {
 			platforms.forEach((platform) => {
 				platform.position.x -= 5;
 			});
+
+			genericObjects.forEach((genericObject) => {
+				genericObject.position.x -= 3; // move the background hills a little slower than everything else
+			});
 		} else if (keys.left.pressed == true) {
 			scrollOffset -= 5;
 			platforms.forEach((platform) => {
 				platform.position.x += 5;
+			});
+
+			genericObjects.forEach((genericObject) => {
+				genericObject.position.x += 3; // move the background hills a little slower than everything else
 			});
 		}
 
