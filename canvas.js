@@ -27,6 +27,7 @@ class Player {
 			x: 0,
 			y: 0,
 		};
+		this.speed = 5;
 		this.width = 30;
 		this.height = 30;
 	}
@@ -195,28 +196,28 @@ function animate() {
 	//if the right key is pressed, subtract 5 from the platform x-position value
 	//if the left key is pressed, add 5 to the platform x-position value
 	if (keys.right.pressed == true && player.position.x < 400) {
-		player.velocity.x = 5;
+		player.velocity.x = player.speed;
 	} else if (keys.left.pressed == true && player.position.x > 100) {
-		player.velocity.x = -5;
+		player.velocity.x = -player.speed;
 	} else {
 		player.velocity.x = 0;
 		if (keys.right.pressed == true) {
-			scrollOffset += 5;
+			scrollOffset += player.speed;
 			platforms.forEach((platform) => {
-				platform.position.x -= 5;
+				platform.position.x -= player.speed;
 			});
 
 			genericObjects.forEach((genericObject) => {
-				genericObject.position.x -= 3; // move the background hills a little slower than everything else
+				genericObject.position.x -= player.speed * 0.66; // move the background hills a little slower than everything else
 			});
 		} else if (keys.left.pressed == true) {
-			scrollOffset -= 5;
+			scrollOffset -= player.speed;
 			platforms.forEach((platform) => {
-				platform.position.x += 5;
+				platform.position.x += player.speed;
 			});
 
 			genericObjects.forEach((genericObject) => {
-				genericObject.position.x += 3; // move the background hills a little slower than everything else
+				genericObject.position.x += player.speed * 0.66; // move the background hills a little slower than everything else
 			});
 		}
 
