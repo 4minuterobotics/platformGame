@@ -49,11 +49,11 @@ class Player {
 		//Falling: if the object still has canvas room to fall, increase the value of the changing y-direction (increase the velocity).
 		if (this.position.y + this.height + this.velocity.y <= canvas.height) {
 			this.velocity.y += gravity; //"10"
-		} else {
-			//otherwise, set the change in y position to zero, and set the position to be the height of the canvas minus the height of the object.
-			this.velocity.y = 0;
-			this.position.y = canvas.height - this.height;
-		}
+		} //else {
+		// 	//otherwise, set the change in y position to zero, and set the position to be the height of the canvas minus the height of the object.
+		// 	this.velocity.y = 0;
+		// 	this.position.y = canvas.height - this.height;
+		// }
 	}
 }
 
@@ -97,15 +97,17 @@ class GenericObject {
 	}
 }
 
-const platformImage = createImage(platform);
-const backgroundImage = createImage(background);
-const hillsImage = createImage(hills);
+//these variables store the image objects
+let platformImage = createImage(platform);
+let backgroundImage = createImage(background);
+let hillsImage = createImage(hills);
 
-const player = new Player();
+let player = new Player();
 
 //create a variable to store 1 platform
 //const platform = new Platform();
 
+//this function creates and returns the image objects
 function createImage(imageSrc) {
 	let image = new Image();
 	image.src = imageSrc;
@@ -113,9 +115,13 @@ function createImage(imageSrc) {
 }
 
 //create a variable to store multiple platforms as an array. The platform constructor accepts an x and y value for the platform anchor, and the image source
-const platforms = [new Platform(-1, 470, platformImage), new Platform(platformImage.width - 3, 470, platformImage)];
+let platforms = [
+	new Platform(-1, 470, platformImage), // first platform
+	new Platform(platformImage.width - 3, 470, platformImage), // 2nd platform with x-positiion set 1 platform width away from the origin
+	new Platform(platformImage.width * 2 + 100, 470, platformImage), // 3rd platform with x-position set 2 platform widths + 100 px away from the origin to create a death pit
+];
 
-const genericObjects = [new GenericObject(-1, -1, backgroundImage), new GenericObject(-1, -1, hillsImage)]; //setting the x and y to -1 gets rid of the white edges
+let genericObjects = [new GenericObject(-1, -1, backgroundImage), new GenericObject(-1, -1, hillsImage)]; //setting the x and y to -1 gets rid of the white edges
 
 const keys = {
 	right: {
@@ -128,6 +134,38 @@ const keys = {
 
 //this variable will track the players change in canvas x-position from its original position
 let scrollOffset = 0;
+
+//this function will reset the game stats
+function init() {
+	//these variables store the image objects
+	platformImage = createImage(platform);
+	backgroundImage = createImage(background);
+	hillsImage = createImage(hills);
+
+	player = new Player();
+
+	//create a variable to store 1 platform
+	//const platform = new Platform();
+
+	//this function creates and returns the image objects
+	function createImage(imageSrc) {
+		let image = new Image();
+		image.src = imageSrc;
+		return image;
+	}
+
+	//create a variable to store multiple platforms as an array. The platform constructor accepts an x and y value for the platform anchor, and the image source
+	platforms = [
+		new Platform(-1, 470, platformImage), // first platform
+		new Platform(platformImage.width - 3, 470, platformImage), // 2nd platform with x-positiion set 1 platform width away from the origin
+		new Platform(platformImage.width * 2 + 100, 470, platformImage), // 3rd platform with x-position set 2 platform widths + 100 px away from the origin to create a death pit
+	];
+
+	genericObjects = [new GenericObject(-1, -1, backgroundImage), new GenericObject(-1, -1, hillsImage)]; //setting the x and y to -1 gets rid of the white edges
+
+	//this variable will track the players change in canvas x-position from its original position
+	scrollOffset = 0;
+}
 
 function animate() {
 	//"3"
@@ -182,8 +220,15 @@ function animate() {
 			});
 		}
 
+		//win scenario
 		if (scrollOffset > 5000) {
 			console.log('you win');
+		}
+
+		//lose scenario
+		if (player.position.y > canvas.height) {
+			console.log('you lose');
+			init(); // reset player stats
 		}
 	}
 	console.log('scroll offset', scrollOffset);
