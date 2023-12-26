@@ -1,6 +1,7 @@
 import platform from './img/platform.png';
 import hills from './img/hills.png';
 import background from './img/background.png';
+import platformSmallTall from './img/platformSmallTall.png';
 
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
@@ -102,6 +103,7 @@ class GenericObject {
 let platformImage = createImage(platform);
 let backgroundImage = createImage(background);
 let hillsImage = createImage(hills);
+let platformSmallTallImage = createImage(platformSmallTall);
 
 let player = new Player();
 
@@ -116,13 +118,9 @@ function createImage(imageSrc) {
 }
 
 //create a variable to store multiple platforms as an array. The platform constructor accepts an x and y value for the platform anchor, and the image source
-let platforms = [
-	new Platform(-1, 470, platformImage), // first platform
-	new Platform(platformImage.width - 3, 470, platformImage), // 2nd platform with x-positiion set 1 platform width away from the origin
-	new Platform(platformImage.width * 2 + 100, 470, platformImage), // 3rd platform with x-position set 2 platform widths + 100 px away from the origin to create a death pit
-];
+let platforms = [];
 
-let genericObjects = [new GenericObject(-1, -1, backgroundImage), new GenericObject(-1, -1, hillsImage)]; //setting the x and y to -1 gets rid of the white edges
+let genericObjects = []; //screate a variable to store multiple generic objects as an array.
 
 const keys = {
 	right: {
@@ -157,9 +155,13 @@ function init() {
 
 	//create a variable to store multiple platforms as an array. The platform constructor accepts an x and y value for the platform anchor, and the image source
 	platforms = [
-		new Platform(-1, 470, platformImage), // first platform
+		new Platform(platformImage.width * 4 + 300 - 2 + platformImage.width - platformSmallTallImage.width, 270, platformSmallTallImage), //
+		new Platform(-1, 470, platformImage), // first standing platform
 		new Platform(platformImage.width - 3, 470, platformImage), // 2nd platform with x-positiion set 1 platform width away from the origin
 		new Platform(platformImage.width * 2 + 100, 470, platformImage), // 3rd platform with x-position set 2 platform widths + 100 px away from the origin to create a death pit
+		new Platform(platformImage.width * 3 + 300, 470, platformImage), // 3rd platform with x-position set 3 platform widths + 300 px away from the origin
+		new Platform(platformImage.width * 4 + 300 - 2, 470, platformImage), // 4th platform with x-position set 4 platform widths + 300 px away from the origin
+		new Platform(platformImage.width * 5 + 700 - 2, 470, platformImage), // 4th platform with x-position set 4 platform widths + 300 px away from the origin
 	];
 
 	genericObjects = [new GenericObject(-1, -1, backgroundImage), new GenericObject(-1, -1, hillsImage)]; //setting the x and y to -1 gets rid of the white edges
@@ -222,7 +224,7 @@ function animate() {
 		}
 
 		//win scenario
-		if (scrollOffset > 5000) {
+		if ((scrollOffset > platformImage.width * 5 + 400 - 2, 470)) {
 			console.log('you win');
 		}
 
@@ -267,6 +269,8 @@ function animate() {
 		}*/
 	});
 }
+
+init();
 animate(); //"6"
 
 // add event listeners for the keys. specify as a string what event is getting called
