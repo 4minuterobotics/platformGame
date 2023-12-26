@@ -199,7 +199,7 @@ function animate() {
 	//if the left key is pressed, add 5 to the platform x-position value
 	if (keys.right.pressed == true && player.position.x < 400) {
 		player.velocity.x = player.speed;
-	} else if (keys.left.pressed == true && player.position.x > 100) {
+	} else if ((keys.left.pressed == true && player.position.x > 100) || (keys.left.pressed == true && scrollOffset == 0 && player.position.x > 0)) {
 		player.velocity.x = -player.speed;
 	} else {
 		player.velocity.x = 0;
@@ -212,7 +212,7 @@ function animate() {
 			genericObjects.forEach((genericObject) => {
 				genericObject.position.x -= player.speed * 0.66; // move the background hills a little slower than everything else
 			});
-		} else if (keys.left.pressed == true) {
+		} else if (keys.left.pressed == true && scrollOffset > 0) {
 			scrollOffset -= player.speed;
 			platforms.forEach((platform) => {
 				platform.position.x += player.speed;
